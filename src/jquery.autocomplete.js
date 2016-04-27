@@ -32,7 +32,7 @@
                     return value.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
                 },
                 createNode: function (containerClass) {
-                    var div = document.createElement('div');
+                    var div = document.createElement('ul');
                     div.className = containerClass;
                     div.style.position = 'absolute';
                     div.style.display = 'none';
@@ -75,7 +75,7 @@
                 onSearchComplete: noop,
                 onSearchError: noop,
                 preserveInput: false,
-                containerClass: 'autocomplete-suggestions',
+                containerClass: 'dropdown-menu',
                 tabDisabled: false,
                 dataType: 'text',
                 currentRequest: null,
@@ -131,7 +131,7 @@
         if (!currentValue) {
             return suggestion.value;
         }
-        
+
         var pattern = '(' + utils.escapeRegExChars(currentValue) + ')';
 
         return suggestion.value
@@ -225,7 +225,7 @@
         onBlur: function () {
             this.enableKillerFn();
         },
-        
+
         abortAjax: function () {
             var that = this;
             if (that.currentRequest) {
@@ -250,9 +250,9 @@
 
             // Adjust height, width and z-index:
             $(that.suggestionsContainer).css({
-                'max-height': options.maxHeight + 'px',
-                'width': options.width + 'px',
-                'z-index': options.zIndex
+                'display': 'block',
+                'top': '30px',
+                'left': '35px'
             });
         },
 
@@ -358,7 +358,7 @@
                     that.el.val(that.currentValue);
                     that.hide();
                 }
-                
+
                 that.stopKillSuggestions();
             }, 50);
         },
@@ -680,7 +680,7 @@
                     html += formatGroup(suggestion, value, i);
                 }
 
-                html += '<div class="' + className + '" data-index="' + i + '">' + formatResult(suggestion, value) + '</div>';
+                html += '<li data-index="' + i + '"><a>' + formatResult(suggestion, value) + '</a></li>';
             });
 
             this.adjustContainerWidth();
@@ -737,7 +737,7 @@
             // -2px to account for suggestions border.
             if (options.width === 'auto') {
                 width = that.el.outerWidth() - 2;
-                container.width(width > 0 ? width : 300);
+                container.width('auto');
             }
         },
 
@@ -798,7 +798,6 @@
         processResponse: function (result, originalQuery, cacheKey) {
             var that = this,
                 options = that.options;
-
             result.suggestions = that.verifySuggestionsFormat(result.suggestions);
 
             // Cache results if cache is not disabled:
